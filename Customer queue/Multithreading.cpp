@@ -1,35 +1,37 @@
 ﻿#include <iostream>
 #include <thread>
-#include <chrono>
+#include<mutex>
+#include<chrono>
+#include<atomic>
 
 using namespace std;
 
-
-const int MAX_CLIENTS = 10; 
-int clientCount = 0; 
+mutex m{};
+int MAX_CLIENTS = 10; 
+atomic<int> AtomicClientCount = 0; 
 
 void Add1() 
 {
-    while (clientCount < MAX_CLIENTS)
+    while (AtomicClientCount < MAX_CLIENTS)
     {
         this_thread::sleep_for(chrono::seconds(1)); 
-        if (clientCount < MAX_CLIENTS) 
+        if (AtomicClientCount < MAX_CLIENTS)
         {
-            clientCount++; 
-            cout << clientCount << endl;
+            AtomicClientCount++;
+            cout << AtomicClientCount << endl;
         }
     }
 }
 
 void sub1() 
 {
-    while (clientCount < MAX_CLIENTS)
+    while (AtomicClientCount < MAX_CLIENTS)
     {
         this_thread::sleep_for(chrono::seconds(2));
-        if (clientCount < MAX_CLIENTS)
+        if (AtomicClientCount < MAX_CLIENTS)
         {
-            clientCount--; 
-            cout << clientCount << endl;
+            AtomicClientCount--;
+            cout << AtomicClientCount << endl;
         }
     }
 }
@@ -42,5 +44,5 @@ int main()
     addThread.join();
     subThread.join();
 
-    return 0;
+    return EXIT_SUCCESS;
 }
